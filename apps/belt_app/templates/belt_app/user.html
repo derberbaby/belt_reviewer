@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>User Reviews</title>
+  </head>
+  <body>
+    <p><a href="/home">Home</a> -
+    <a href="/logout">Logout</a></p>
+    <p><a href="/books/add">Add Book and Review</a></p>
+    {% if request.session.user != user.id %}
+      {% if me in friends %}
+        <p><a href="{% url 'del_friend' user.id %}">Delete</a></p>
+      {% else %}
+        <p><a href="{% url 'add_friend' user.id %}">Add as Friend</a></p>
+      {% endif %}
+    {% endif %}
+    <h2>User Alias: {{ user.alias }}</h2>
+    <p>Name: {{ user.name }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Total Reviews: {{ reviews.count }}</p>
+
+    <h2>Friends:</h2>
+    {% for friend in friends %}
+      <p><a href="{% url 'user' friend.id %}">{{ friend.name }}</a></p>
+    {% endfor %}
+
+    <h3>Posted Reviews on the following books:</h3>
+      {% for review in reviews %}
+        <p><a href="{% url 'book' review.book.id %}">{{ review.book.title }}</a></p>
+      {% endfor %}
+
+    <h3>Favorites:</h3>
+    {% for fave in faves %}
+      <p><a href="{% url 'book' fave.id %}">{{ fave.title }}</a></p>
+    {% endfor %}
+  </body>
+</html>

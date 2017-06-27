@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Book</title>
+  </head>
+  <body>
+    <a href="/home">Home</a>
+    <a href="/logout">Logout</a>
+
+    <h3>{{ book.title }}</h3>
+    <p>Author(s): </p>
+    {% for author in authors %}
+      <p><a href="{% url 'author' author.id %}">{{ author.name }}</a>
+    {% endfor %}</p>
+
+    {% if book in faves %}
+      <p>You've favorited this book</p>
+    {% else %}
+      <p><a href="{% url 'fave' book.id %}">Favorite this book!</a></p>
+    {% endif %}
+
+    <h3>Reviews:</h3>
+    {% for review in reviews %}
+    <p>Rating: {{ review.rating }}</p>
+    <p><a href="{% url 'user' review.user.id %}">{{ review.user.alias }}</a> says: {{ review.comment }}</p>
+    <p>Posted on {{ review.created_at }}</p>
+      {% if review.user.id == user.id %}
+        <a href="{% url 'delete' review.id %}">Delete This Review</a>
+      {% endif %}
+    {% endfor %}
+
+    <h4>Add a Review:</h4>
+    <div id="error">
+      {% if messages %}
+        {% for error in messages %}
+          <p>{{ error }}</p>
+        {% endfor %}
+      {% endif %}
+    </div>
+    <form class="" action="{% url 'review_book' book.id %}" method="post">
+      {% csrf_token %}
+      <textarea name="comment" rows="8" cols="80"></textarea>
+      <p>Rating: <input type="number" name="rating" min="1" max="5"></p>
+      <input type="submit" name="" value="Submit Review">
+    </form>
+
+  </body>
+</html>
